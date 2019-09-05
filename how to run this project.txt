@@ -1,0 +1,8 @@
+To run to this project
+view :  	
+
+1-> first to change directory of your project  : cd path of your folder
+2-> run type :  python model.py
+3-> run type :  python app.py
+4-> copy url : http://127.0.0.1:5000/ peast onto browser
+5-> hey we go put values get the result

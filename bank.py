@@ -54,7 +54,7 @@ pd.crosstab(bank.Exited, bank.NumOfProducts).plot(kind = "bar")  #not exited cut
 pd.crosstab(bank.Exited, bank.HasCrCard).plot(kind = "bar")       #Exited customer has low Credit card holders, 0 for 60% , 1 for 10%
 pd.crosstab(bank.Exited, bank.IsActiveMember).plot(kind = "bar")   # 12% Exzited customer has no Active with bank
 
-#Data visulization using boxplot of countineous varibles wrt to each category
+#Data visulization using boxplot of countineous varibles wrt to category varible
 sns.boxplot(x="Exited",y="Balance", data= bank,palette = "hls")  
 sns.boxplot(x="Exited",y="Age", data= bank,palette = "hls")        #exited cutomers has age of 40 to 50
 sns.boxplot(x="Exited",y="CreditScore", data= bank,palette = "hls")
@@ -235,7 +235,9 @@ score.mean()  #82
 from imblearn.combine import SMOTETomek
 from imblearn.over_sampling import RandomOverSampler
 os =  RandomOverSampler(ratio=1)                 #ratio=1  add records to lower category that much both becomes equal
-X_res,y_res=os.fit_sample(new_bank.drop(['Exited'], axis = 1),new_bank['Exited'])
+X_res,y_res=os.fit_sample(new_bank.iloc[:,0:8],new_bank['Exited'])
+
+#new_bank.iloc[:,0:8]
 
 #from imblearn.under_sampling import NearMiss
 #nm = NearMiss(random_state=42)
@@ -253,4 +255,24 @@ randomforest_classifier= RandomForestClassifier(n_estimators=10)
 score=cross_val_score(randomforest_classifier,X_res,y_res,cv=10)
 score.mean()  #0.95
 
+
+model = randomforest_classifier.fit(X_res,y_res)
+pred = model.predict(X_res)
+score = accuracy_score(pred,y_res)
+score #99
+
+confusion_matrix(pred, y_res)
+
+import pickle 
+
+import os
+os.getcwd()
+
+# Saving model to disk
+pickle.dump(model, open('model.pkl','wb'))  #precompiled foremat model file
+
+# Loading model to compare the results
+model = pickle.load(open('model.pkl','rb'))
+X.columns
+print(model.predict([[999,32,3,50000,3,1,1,20000]]))
 
